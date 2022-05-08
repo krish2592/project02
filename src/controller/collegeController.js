@@ -3,9 +3,11 @@ const { isValidRequestBody, isValid, isValidName } = require("../utility/validat
 
 const createCollege = async (req, res) => {
     try {
+        let queryParams = req.query;
         const data = req.body;
-
-        if (!isValidRequestBody(data)) return res.status(400).send({ status: false, msg: "Data not found" })
+        
+        if(isValidRequestBody(queryParams)) return res.status(400).send({ status: false, msg: "Here query is not a valid request!" })
+        if (!isValidRequestBody(data)) return res.status(404).send({ status: false, msg: "Data not found" })
 
         let { name, fullName, logoLink } = data
 
@@ -13,7 +15,9 @@ const createCollege = async (req, res) => {
         if(!isValidName(name)) return res.status(400).send({ status: false, msg: "College name only contain alphanumeric, special character[() . @] and wihout space" })
         const isUnique= await collegeModel.findOne({name:name})
         if(isUnique) return res.status(400).send({ status: false, msg: "College name already exist" })
+
         if (!isValid(fullName)) return res.status(400).send({ status: false, msg: "College full name is required" })
+        
         if (!isValid(logoLink)) return res.status(400).send({ status: false, msg: "Logo link is required" })
 
         let collegeData = { name, fullName, logoLink }
