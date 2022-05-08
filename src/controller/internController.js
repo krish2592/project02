@@ -50,10 +50,10 @@ let createIntern = async function (req, res) {
 
 const getIntern = async function (req, res) {
     try {
-        let collegName = req.query.collegeName.toLowerCase();
+        let collegName = req.query.collegeName;
         if (!isValid(collegName)) return res.status(400).send({ status: false, msg: "collegeName is required in query params" })
 
-        const getCollege = await collegeModel.find({ name: collegName })
+        const getCollege = await collegeModel.find({ name: collegName.toLowerCase() })
 
         if (Array.isArray(getCollege) && getCollege.length === 0) return res.status(404).send({ status: false, msg: "College not found!" }) //use masking in this line
         
